@@ -37,7 +37,7 @@ So you made the localStorage asynchronous? Tell me how easier it is ...
     db.create("myDBName", function (db, numberOfEntries) {
         // database created, time to rock'n'roll!
         var callback = function (value, key) {
-            if (value === "false") {
+            if (value === "true") {
                 // do amazing stuff for the very first time
             }
             // do whatever you want to
