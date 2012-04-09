@@ -75,7 +75,9 @@ AsynchronousStorage API
     for (var i = 0; i < db.length; i++) {
         db.removeItem(db.key(i), isItLastOne);
     }
+
   * `db.length` returns the length of all stored keys **in your database name**
+
 
 And this is pretty much it ... wanna test? [this page should be green](http://www.3site.eu/db/test/ "test")
 
