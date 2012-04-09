@@ -52,6 +52,7 @@ So you made the localStorage asynchronous? Tell me how easier it is ...
     });
 
 Above is just an example of _easiness_ provided by this asynchronousStorage but here few main pros:
+
   * **unobtrusive**, you chose your own database name as you would do for any of your _libraries or namespaces_ . This simply means something like `localStorage.clear()`, performed by another library, will not erase your whole data. `db.clear()` aim is to clean only data **you** stored and nobody else.
   * **asynchronous**, since almost every method is made with async in mind. The only two things that are not asynchronous are `db.length` and, since length is synchronous, `db.key(index)` to retrieve the `key` associated to that index.
   * **nothing new to learn** which is the most annoying part of all these _not fully defined yet_ options we have today in the Web scenario
