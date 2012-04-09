@@ -80,7 +80,7 @@ function compile(copyright, fullName, minName, files, search, replace) {
     tmp.on('end', function() {
       console.log('Full size:       ' + getSize('../' + fullName));
       console.log('Minified size:   ' + getSize('../' + minName));
-      console.log('Minified size:   ' + getSize('../' + minName + '.gz'));
+      console.log('Minzipped size:  ' + getSize('../' + minName + '.gz'));
       exec('rm "' + fullPath('../' + minName + '.gz') + '"', next);
     });
   }
