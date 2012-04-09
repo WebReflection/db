@@ -74,7 +74,7 @@ AsynchronousStorage API
     }
   * `db.length` returns the length of all stored keys **in your database name**
 
-And this is pretty much it ... wanna test? (http://www.3site.eu/db/test/ "test")[this page should be green]
+And this is pretty much it ... wanna test? [this page should be green](http://www.3site.eu/db/test/ "test")
 
 TODOs
 -----
