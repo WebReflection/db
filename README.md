@@ -67,14 +67,14 @@ AsynchronousStorage API
   * `db.clear([callback[, errorback]])` remove all keys associated to your **database name**, the one used to create the storage at the very beginning. `callback(db, numberOfEntries)` will be triggered once the operation has been completed, same signature of the storage creation for functions reusability.
   * `db.key(index)` returns **synchronously** the associated key for that index. This is necessary to make easier for developers loops over all keys as they do already with the localStorage, i.e.
 
-    function isItLastOne() {
-        if (!--i) {
-            doAgainAllStuff();
+        function isItLastOne() {
+            if (!--i) {
+                doAgainAllStuff();
+            }
         }
-    }
-    for (var i = 0; i < db.length; i++) {
-        db.removeItem(db.key(i), isItLastOne);
-    }
+        for (var i = 0; i < db.length; i++) {
+            db.removeItem(db.key(i), isItLastOne);
+        }
 
   * `db.length` returns the length of all stored keys **in your database name**
 
