@@ -10,6 +10,7 @@ My proposal to bring WebSQL back through Firefox extension has been banned, afte
 The Problem with the WebStorage API
 -----------------------------------
 **localStorage** and **sessionStorage** have been around for quite a while and many developers are using these for any sort of task, including any sort of data stored in these synchronous storage without considering that:
+
   * **your data is not safe**, the first script that will easily perform a `localStorage.clear()` in the page your script is, your whole logic will magically fuck up without any notification (also because the event "storage" is completely randomly implemented)
   * **synchronous means blocking**, but we all agree that synchronous logic is easier to implement and maintain, right? ... well, unless you are not storing a few bytes once a while, you are making the browser potentially stuck ... just stop it, if you find this solution convenient
   * **your data is limited**, from 2mb up to 5mb but most important, the WebStorage API does not provide any way to know how much data is still available
