@@ -45,6 +45,7 @@
                           },
     setTimeout            = window.setTimeout,
     // strings shortcuts
+    EOF                   = "\x00",
     ndexedDB              = "ndexedDB",
     openDatabase          = "openDatabase",
     executeSql            = "executeSql",

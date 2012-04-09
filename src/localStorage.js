@@ -4,7 +4,7 @@
       self.name = name;
       self.type = localStorage;
       self._db = window[localStorage];
-      self._prefix = unobtrusiveTableName + "\x00" + self.name + "\x00";
+      self._prefix = escape(unobtrusiveTableName + EOF + self.name + EOF);
       self[$keys] = [];
       setLength.call(self);
       setTimeout(bind.call(callback, self, self, self[$length]), 0);
