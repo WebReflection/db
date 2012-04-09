@@ -77,7 +77,8 @@ AsynchronousStorage API
         }
 
   * `db.length` returns the length of all stored keys **in your database name**
-
+  * `db.name` returns the name you chose for this storage instance
+  * `db.type` returns the type of the database you are using such _WebSQL_, _IndexedDB_ (not yet), _localStorage_, and _cookie_
 
 And this is pretty much it ... wanna test? [this page should be green](http://www.3site.eu/db/test/ "test")
 
