@@ -24,7 +24,7 @@ This is what is this project about, a basically identical API borrowed directly 
 The Concept
 -----------
 First of all, the main purpose of this project is to use any asynchronous possibility available in the browser through a **key/value pairs** based interface where **both keys and values should be strings**.
-It is not the purpose of this script to provide any *JSON* shim in your code, but of course as you have probably used *JSON* already to store data in a generic storage, you can do the same with this implementation, remembering to `JSON.parse(yourDataObject)` before you store it.
+It is not the purpose of this script to provide any *JSON* shim in your code, but of course as you have probably used *JSON* already to store data in a generic storage, you can do the same with this implementation, remembering to `JSON.stringify(yourDataObject)` before you store it.
 Back to the asynchronous concept, Where there is no possibility, the `localStorage` or even `document.cookie` is used as fallback so that even IE6 should work "_without problems_", whenever you decided to harakiri supporting latter browser.
 The very first option, if available, is the **WebSQL** storage, the best thing ever destroyed by *W3C*, the most cross platform, for both Desktop and Mobile, storage possibility.
 **IndexedDB**, whenever I'll be able to make it work as expected in a couple of Firefox versions I am trying to test, would be the other option where WebSQL is not available, potentially for IE10 too.
