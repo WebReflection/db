@@ -85,7 +85,7 @@
   } else if (localStorage in window) {
     AsynchronousStorage = /*:localStorage:*/
   } else {
-    AsynchronousStorage = /*:cookies:*/
+    AsynchronousStorage = /*:cookie:*/
   }
 
 }(this));

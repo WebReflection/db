@@ -52,12 +52,12 @@ wru.test([
         name: "db::getItem",
         test: function () {
             var randomKey = "_" + Math.random();
-            shared.getItem(randomKey, async(function (value, key, db) {
+            shared.getItem(randomKey, async("get unknown key", function (value, key, db) {
                 assert("no value", value === null);
                 assert("correct key", key === randomKey);
                 assert("db sent", db === shared);
             }));
-            shared.getItem("test", async(function (value, key, db) {
+            shared.getItem("test", async("get known key", function (value, key, db) {
                 assert("correct value", value === "something else");
                 assert("correct key", key === "test");
                 assert("db sent", db === shared);

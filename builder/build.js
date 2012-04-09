@@ -13,14 +13,14 @@ JSBuilder.queue([
           "/*:WebSQL:*/",
             "/*:IndexedDB:*/",
           "/*:localStorage:*/",
-          "/*:cookies:*/"
+          "/*:cookie:*/"
           //, /function AsynchronousStorage/g
         ],
         [
           JSBuilder.read('../src/WebSQL.js'),
           JSBuilder.read('../src/IndexedDB.js'),
           JSBuilder.read('../src/localStorage.js'),
-          JSBuilder.read('../src/cookies.js')
+          JSBuilder.read('../src/cookie.js')
           //, "function "
         ]
       )
