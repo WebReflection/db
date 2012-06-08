@@ -3,7 +3,7 @@
     <head>
         <title>db.js</title>
         <!-- https://github.com/WebReflection/wru -->
-        <script>document.write('<script src="../build/db.js?' + Math.random() + '"><' + '/script>')</script>
+        <script>document.write('<script src="../build/asyncStorage.js?' + Math.random() + '"><' + '/script>')</script>
         <script>function wru(wru){var assert=wru.assert,async=wru.async,log=wru.log;
 
 // enojy your tests!
@@ -14,7 +14,7 @@ wru.test([
     {
         name: "database creation",
         test: function () {
-            db.create("test", async(function (db, length) {
+            asyncStorage.create("async_storage", async("database creation", function (db, length) {
                 assert("database created", shared = db);
                 assert("length available", typeof length == "number");
                 log(db.type);

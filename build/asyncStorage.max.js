@@ -310,7 +310,8 @@
     };
 
     onCheckComplete = function (key, callback, event) {
-      callback.call(this, event.target.result[valueFieldName], key, this);
+      var result = event.target.result;
+      callback.call(this, result ? result[valueFieldName] : NULL, key, this);
     };
 
     onUpdateComplete = function (key, value, callback, event) {
