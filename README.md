@@ -1,5 +1,5 @@
-db.js :: a developer friendly asynchronousStorage
-=================================================
+asyncStorage :: a developer friendly Asynchronous Storage
+=========================================================
 let's face reality, the status of storages in the Web is a mess.
 localStorage is a synchronous API not suitable at all to store data.
 WebSQL has been abandoned, still the only option, as non experimental, in Safari, Chrome, and Opera.
@@ -27,14 +27,14 @@ First of all, the main purpose of this project is to use any asynchronous possib
 It is not the purpose of this script to provide any *JSON* shim in your code, but of course as you have probably used *JSON* already to store data in a generic storage, you can do the same with this implementation, remembering to `JSON.stringify(yourDataObject)` before you store it.
 Back to the asynchronous concept, Where there is no possibility, the `localStorage` or even `document.cookie` is used as fallback so that even IE6 should work "_without problems_", whenever you decided to harakiri supporting latter browser.
 The very first option, if available, is the **WebSQL** storage, the best thing ever destroyed by *W3C*, the most cross platform, for both Desktop and Mobile, storage possibility.
-**IndexedDB**, whenever I'll be able to make it work as expected in a couple of Firefox versions I am trying to test, would be the other option where WebSQL is not available, potentially for IE10 too.
+**IndexedDB** would be the other option where WebSQL is not available. This order might change in the future preferring IndexedDB as first option.
 All others will fallback into *localStorage* or *document.cookie* and I am not discarding at all the possibility to use a *SharedObject* from the Flash Player world ... but, you know, I have abandoned Flash Player about 6 years ago and if I can make it without it, now that would be cool!
 What else? Oh well, it's easy!
 
 So you made the localStorage asynchronous? Tell me how easier it is ...
 -----------------------------------------------------------------------
 
-    db.create("myDBName", function (db, numberOfEntries) {
+    asyncStorage.create("myDBName", function (db, numberOfEntries) {
         // database created, time to rock'n'roll!
         var callback = function (value, key) {
             if (value === "true") {
@@ -60,7 +60,8 @@ Above is just an example of _easiness_ provided by this asynchronousStorage but 
 AsynchronousStorage API
 -----------------------
   * `create(name, callback)` creates a new database with specific name in order to, somehow, simulate namespaces in the storage itself. `callback(db, numberOfEntries)` will be fired once the database has been created.
-  * `create(name, size, callback)` does the same, except you might want to specify in advance the size of the database. This method won't work as expected with `localStorage` and `cookie` fallback since there's no way to force the browser to use that size.
+  * `create(name, callback, errorback)` does the same, except you might want to handle potential errors during database creation (user denied, not enough space, etc).
+  * `create(name, callback, errorback, size)` does the same, except you might want to specify in advance the size of the database. This overload works as expected with WebSQL only.
   * `db.setItem(key, value[, callback[, errorback]])` set an item in the storage and calls `callback(value, key, db)` once the operation is completed. The `errorback` is called if something went wrong during this operation.
   * `db.getItem(key[, callback[, errorback]])` retrieves a value from the storage, `callback(value, key, db)` is called once the operation is completed where the `value` is exactly `null` wherever `key` was not set before
   * `db.removeItem(key[, callback[, errorback]])` remove an item from the storage, calls `callback(key, db)` once succeeded
@@ -84,6 +85,5 @@ And this is pretty much it ... wanna test? [this page should be green](http://ww
 
 TODOs
 -----
-  * make the IndexedDB fallback work somehow in most recent Firefox browsers
   * improve tests to test errorbacks too
   * optionally, consider a fifth fallback through Flash Player shared object (*meh...!*)

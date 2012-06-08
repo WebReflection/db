@@ -6,9 +6,9 @@ var
 JSBuilder.queue([
   function () {
     JSBuilder.write(
-      '../build/db.max.js',
+      '../build/asyncStorage.max.js',
       JSBuilder.replace(
-        JSBuilder.read('../src/db.js'),
+        JSBuilder.read('../src/asyncStorage.js'),
         [
           "/*:WebSQL:*/",
             "/*:IndexedDB:*/",
@@ -29,15 +29,15 @@ JSBuilder.queue([
   },
   "",
   "-----------------------",
-  "|        db.js        |",
+  "|   asyncStorage.js   |",
   "-----------------------",
   function () {
     JSBuilder.compile(
         copyright,
-        'build/db.max.js',
-        'build/db.js',
+        'build/asyncStorage.max.js',
+        'build/asyncStorage.js',
         [
-            "../build/db.max.js"
+            "../build/asyncStorage.max.js"
         ]
     );
   },
