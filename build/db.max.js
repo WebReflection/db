@@ -3,23 +3,21 @@
 */
 /**@license (C) Andrea Giammarchi, @WebReflection - Mit Style License
 */
-"db" in this || (function (window) {"use strict";
+(function (asyncStorage, window) {"use strict";
+
+  if (asyncStorage in window) return;
 
   // node.js exports
   if (typeof __dirname != "undefined") {
     window.create = create;
     window = global;
   } else {
-    window.db = {create: create};
+    window[asyncStorage] = {create: create};
   }
 
   // exported function
-  function create(name, size, callback) {
-    if (callback == NULL) {
-      callback = size;
-      size = 1 << 20;
-    }
-    return new AsynchronousStorage(name, size, callback);
+  function create(name, callback, errorback, size) {
+    return new AsynchronousStorage(name, callback || nothingToDoHere, errorback || nothingToDoHere, size || 1 << 20);
   }
 
   // utility
@@ -58,9 +56,9 @@
     readTransaction       = "readTransaction",
     localStorage          = "localStorage",
     prototype             = "prototype",
-    unobtrusiveTableName  = "asynchronous_storage",
-    keyFieldName          = "db_key",
-    valueFieldName        = "db_value",
+    unobtrusiveTableName  = asyncStorage + "_data",
+    keyFieldName          = asyncStorage + "_key",
+    valueFieldName        = asyncStorage + "_value",
     $keys                 = "_keys",
     $length               = "length",
     $key                  = "key",
@@ -86,18 +84,24 @@
   // the circus ... hopefully a bloody fallback will always be available
   if (openDatabase in window) {
     AsynchronousStorage = // WebSQL version
-    function AsynchronousStorage(name, size, callback) {
-      this.name = name;
-      this.type = "WebSQL";
-      (this._db = window[openDatabase](
-        name,
-        "1.0",
-        "",
-        size
-      ))[transaction](bind.call(prepareTable, this, callback));
+    function AsynchronousStorage(name, callback, errorback, size) {
+      var self = this;
+      errorback = bind.call(errorback, self);
+      self.name = name;
+      self.type = "WebSQL";
+      try {
+        (self._db = window[openDatabase](
+          name,
+          "1.0",
+          "",
+          size
+        ))[transaction](bind.call(prepareTable, self, callback, errorback), errorback);
+      } catch(o_O) {
+        errorback(o_O);
+      }
     };
 
-    prepareTable = function (callback, t) {
+    prepareTable = function (callback, errorback, t) {
       t[executeSql](concat(
           'CREATE TABLE IF NOT EXISTS ',
             unobtrusiveTableName, ' ',
@@ -107,18 +111,18 @@
           ')'
         ),
         [],
-        bind.call(readLength, this, callback),
-        nothingToDoHere
+        bind.call(readLength, this, callback, errorback),
+        errorback
       );
     };
 
-    readLength = function (callback) {
+    readLength = function (callback, errorback) {
       this._db[readTransaction](
-        bind.call(checkLength, this, callback)
+        bind.call(checkLength, this, callback, errorback)
       );
     };
 
-    checkLength = function (callback, t) {
+    checkLength = function (callback, errorback, t) {
       t[executeSql](concat(
           'SELECT ',
             keyFieldName,
@@ -127,7 +131,7 @@
         ),
         [],
         bind.call(setLength, this, callback),
-        nothingToDoHere
+        errorback
       );
     };
 
@@ -181,7 +185,8 @@
     };
 
     onItemsCleared = function (callback) {
-      callback.call(this, this, this[$keys][$length] = this[$length] = 0);
+      var self = this;
+      callback.call(self, self, self[$keys][$length] = self[$length] = 0);
     };
 
     clearAllItems = function (callback, errorback, t) {
@@ -243,8 +248,141 @@
         onCheckComplete
       ));
     };
-  //fuck you IndexedDB, not usable right now } else if (indexedDB) {
-    //AsynchronousStorage = /*-IndexedDB:*/
+  } else if (indexedDB) {
+    AsynchronousStorage = // IndexedDB version
+    function AsynchronousStorage(name, callback, errorback) {
+      try {
+        var
+          self = this,
+          db = indexedDB.open(self.name = name, 1)
+        ;
+        self.type = "IndexedDB";
+        db[readTransaction]("upgradeneeded", prepareTable, !1);
+        db[readTransaction](executeSql, bind.call(readLength, self, callback), !1);
+        db[readTransaction](ndexedDB, bind.call(errorback, self), !1);
+      } catch(o_O) {
+        errorback.call(this, o_O);
+      }
+    };
+
+    executeSql = "success";
+    ndexedDB = "error";
+    readTransaction = "addEventListener";
+
+    prepareTable = function (event) {
+      event.target.result.createObjectStore(
+        unobtrusiveTableName, {
+          keyPath: keyFieldName,
+          autoIncrement: !1
+      }).createIndex(
+        valueFieldName,
+        valueFieldName,
+        {unique: !1}
+      );
+    };
+
+    readLength = function (callback, event) {
+      var self = this;
+      self[$keys] = [];
+      self._db = event.target.result;
+      onGetComplete(self).openCursor()[readTransaction](
+        executeSql,
+        bind.call(checkLength, self, callback),
+        !1
+      );
+    };
+
+    checkLength = function (callback, event) {
+      var
+        self = this,
+        cursor = event.target.result
+      ;
+      if (cursor) {
+        self[$keys].push(cursor.key);
+        cursor["continue"]();
+      } else {
+        callback.call(self, self, setLength(self));
+      }
+    };
+
+    setLength = function (self) {
+      return self[$length] = self[$keys][$length];
+    };
+
+    onCheckComplete = function (key, callback, event) {
+      callback.call(this, event.target.result[valueFieldName], key, this);
+    };
+
+    onUpdateComplete = function (key, value, callback, event) {
+      var
+        self = this,
+        i = indexOf.call(self[$keys], key)
+      ;
+      ~i || self[$keys].push(key);
+      setLength(self);
+      callback.call(self, value, key, self);
+    };
+
+    onGetComplete = function (self, write) {
+      var
+        db = self._db,
+        t = db[transaction]
+      ;
+      return t.apply(db, [unobtrusiveTableName].concat(write ? "readwrite" : [])).objectStore(
+        unobtrusiveTableName
+      );
+    };
+
+    onItemCleared = function (key, callback, event) {
+      var
+        self = this,
+        i = indexOf.call(self[$keys], key)
+      ;
+      ~i && self[$keys].splice(i, 1);
+      setLength(self);
+      callback.call(self, key, self);
+    };
+
+    onItemsCleared = function (callback) {
+      var self = this;
+      callback.call(self, self, self[$keys][$length] = self[$length] = 0);
+    };
+
+    asPrototype = AsynchronousStorage[prototype];
+    asPrototype[$key] = function key(i) {
+      return this[$keys][i];
+    };
+    asPrototype[$removeItem] = function removeItem(key, callback, errorback) {
+      var op = onGetComplete(this, 1)["delete"](key);
+      op[readTransaction](executeSql, bind.call(
+        onItemCleared, this, key, callback || nothingToDoHere
+      ), !1);
+      op[readTransaction](ndexedDB, bind.call(errorback || nothingToDoHere, this), !1);
+    };
+    asPrototype[$clear] = function clear(callback, errorback) {
+      var op = onGetComplete(this, 1).clear();
+      op[readTransaction](executeSql, bind.call(
+        onItemsCleared, this, callback || nothingToDoHere
+      ), !1);
+      op[readTransaction](ndexedDB, bind.call(errorback || nothingToDoHere, this), !1);
+    };
+    asPrototype[$getItem] = function getItem(key, callback, errorback) {
+      var op = onGetComplete(this).get(key);
+      op[readTransaction](executeSql, bind.call(
+        onCheckComplete, this, key, callback || nothingToDoHere
+      ), !1);
+      op[readTransaction](ndexedDB, bind.call(errorback || nothingToDoHere, this), !1);
+    };
+    asPrototype[$setItem] = function setItem(key, value, callback, errorback) {
+      var data = {}, op;
+      data[keyFieldName] = key;
+      data[valueFieldName] = value;
+      op = onGetComplete(this, 1).put(data);
+      op[readTransaction](executeSql, bind.call(
+        onUpdateComplete, this, key, value, callback || nothingToDoHere
+      ), !1);
+      op[readTransaction](ndexedDB, bind.call(errorback || nothingToDoHere, this), !1);
+    };
   } else if (localStorage in window) {
     AsynchronousStorage = // localStorage version
     function AsynchronousStorage(name, size, callback) {
@@ -460,4 +598,5 @@
     };
   }
 
-}(this));
+}("asyncStorage", this));
+// var db = asyncStorage.create("db", function () {console.log(arguments)});

@@ -1,20 +1,18 @@
-"db" in this || (function (window) {"use strict";
+(function (asyncStorage, window) {"use strict";
+
+  if (asyncStorage in window) return;
 
   // node.js exports
   if (typeof __dirname != "undefined") {
     window.create = create;
     window = global;
   } else {
-    window.db = {create: create};
+    window[asyncStorage] = {create: create};
   }
 
   // exported function
-  function create(name, size, callback) {
-    if (callback == NULL) {
-      callback = size;
-      size = 1 << 20;
-    }
-    return new AsynchronousStorage(name, size, callback);
+  function create(name, callback, errorback, size) {
+    return new AsynchronousStorage(name, callback || nothingToDoHere, errorback || nothingToDoHere, size || 1 << 20);
   }
 
   // utility
@@ -53,9 +51,9 @@
     readTransaction       = "readTransaction",
     localStorage          = "localStorage",
     prototype             = "prototype",
-    unobtrusiveTableName  = "asynchronous_storage",
-    keyFieldName          = "db_key",
-    valueFieldName        = "db_value",
+    unobtrusiveTableName  = asyncStorage + "_data",
+    keyFieldName          = asyncStorage + "_key",
+    valueFieldName        = asyncStorage + "_value",
     $keys                 = "_keys",
     $length               = "length",
     $key                  = "key",
@@ -81,12 +79,13 @@
   // the circus ... hopefully a bloody fallback will always be available
   if (openDatabase in window) {
     AsynchronousStorage = /*:WebSQL:*/
-  //fuck you IndexedDB, not usable right now } else if (indexedDB) {
-    //AsynchronousStorage = /*-IndexedDB:*/
+  } else if (indexedDB) {
+    AsynchronousStorage = /*:IndexedDB:*/
   } else if (localStorage in window) {
     AsynchronousStorage = /*:localStorage:*/
   } else {
     AsynchronousStorage = /*:cookie:*/
   }
 
-}(this));
+}("asyncStorage", this));
+// var db = asyncStorage.create("db", function () {console.log(arguments)});

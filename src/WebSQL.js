@@ -1,16 +1,22 @@
 // WebSQL version
-    function AsynchronousStorage(name, size, callback) {
-      this.name = name;
-      this.type = "WebSQL";
-      (this._db = window[openDatabase](
-        name,
-        "1.0",
-        "",
-        size
-      ))[transaction](bind.call(prepareTable, this, callback));
+    function AsynchronousStorage(name, callback, errorback, size) {
+      var self = this;
+      errorback = bind.call(errorback, self);
+      self.name = name;
+      self.type = "WebSQL";
+      try {
+        (self._db = window[openDatabase](
+          name,
+          "1.0",
+          "",
+          size
+        ))[transaction](bind.call(prepareTable, self, callback, errorback), errorback);
+      } catch(o_O) {
+        errorback(o_O);
+      }
     };
 
-    prepareTable = function (callback, t) {
+    prepareTable = function (callback, errorback, t) {
       t[executeSql](concat(
           'CREATE TABLE IF NOT EXISTS ',
             unobtrusiveTableName, ' ',
@@ -20,18 +26,18 @@
           ')'
         ),
         [],
-        bind.call(readLength, this, callback),
-        nothingToDoHere
+        bind.call(readLength, this, callback, errorback),
+        errorback
       );
     };
 
-    readLength = function (callback) {
+    readLength = function (callback, errorback) {
       this._db[readTransaction](
-        bind.call(checkLength, this, callback)
+        bind.call(checkLength, this, callback, errorback)
       );
     };
 
-    checkLength = function (callback, t) {
+    checkLength = function (callback, errorback, t) {
       t[executeSql](concat(
           'SELECT ',
             keyFieldName,
@@ -40,7 +46,7 @@
         ),
         [],
         bind.call(setLength, this, callback),
-        nothingToDoHere
+        errorback
       );
     };
 
@@ -94,7 +100,8 @@
     };
 
     onItemsCleared = function (callback) {
-      callback.call(this, this, this[$keys][$length] = this[$length] = 0);
+      var self = this;
+      callback.call(self, self, self[$keys][$length] = self[$length] = 0);
     };
 
     clearAllItems = function (callback, errorback, t) {
