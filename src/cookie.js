@@ -1,5 +1,5 @@
 // cookie based version
-    function AsynchronousStorage(name, size, callback) {
+    function AsynchronousStorage(name, callback, errorback) {
       var self = this;
       self.name = name;
       self.type = "cookie";

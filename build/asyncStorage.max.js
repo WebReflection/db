@@ -386,7 +386,7 @@
     };
   } else if (localStorage in window) {
     AsynchronousStorage = // localStorage version
-    function AsynchronousStorage(name, size, callback) {
+    function AsynchronousStorage(name, callback, errorback) {
       var self = this;
       self.name = name;
       self.type = localStorage;
@@ -482,7 +482,7 @@
     };
   } else {
     AsynchronousStorage = // cookie based version
-    function AsynchronousStorage(name, size, callback) {
+    function AsynchronousStorage(name, callback, errorback) {
       var self = this;
       self.name = name;
       self.type = "cookie";
