@@ -3,7 +3,7 @@
       var self = this;
       self.name = name;
       self.type = localStorage;
-      self._db = window[localStorage];
+      self._db = global[localStorage];
       self._prefix = escape(unobtrusiveTableName + EOF + self.name + EOF);
       self[$keys] = [];
       setLength.call(self);
@@ -93,3 +93,6 @@
     asPrototype[$setItem] = function setItem(key, value, callback, errorback) {
       setTimeout(bind.call(prepareUpdate, readLength(this), key, value, callback || nothingToDoHere, errorback || nothingToDoHere), 0);
     };
+
+module.exports = AsynchronousStorage
+    

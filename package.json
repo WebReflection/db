@@ -1,5 +1,8 @@
 {
   "name": "asyncStorage",
   "version": "0.1.1",
-  "main":"./build/asyncStorage.js"
+  "main":"./build/asyncStorage.js",
+  "devDependencies": {
+        "wrapup": "0.11.2"
+   }
 }

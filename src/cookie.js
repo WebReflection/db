@@ -3,7 +3,7 @@
       var self = this;
       self.name = name;
       self.type = "cookie";
-      self._db = window.document;
+      self._db = global.document;
       self._prefix = unobtrusiveTableName + EOF + self.name + EOF;
       self[$keys] = [];
       setLength.call(self);
@@ -114,3 +114,5 @@
     asPrototype[$setItem] = function setItem(key, value, callback, errorback) {
       setTimeout(bind.call(prepareUpdate, readLength(this), key, value, callback || nothingToDoHere, errorback || nothingToDoHere), 0);
     };
+
+module.exports = AsynchronousStorage

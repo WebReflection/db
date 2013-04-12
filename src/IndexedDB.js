@@ -133,3 +133,4 @@
       ), !1);
       op[readTransaction](ndexedDB, bind.call(errorback || nothingToDoHere, this), !1);
     };
+module.exports = AsynchronousStorage

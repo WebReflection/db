@@ -5,7 +5,7 @@
       self.name = name;
       self.type = "WebSQL";
       try {
-        (self._db = window[openDatabase](
+        (self._db = global[openDatabase](
           name,
           "1.0",
           "",
@@ -163,3 +163,6 @@
         onCheckComplete
       ));
     };
+
+module.exports = AsynchronousStorage
+    

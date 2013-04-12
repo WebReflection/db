@@ -1,14 +1,3 @@
-(function (asyncStorage, window) {"use strict";
-
-  if (asyncStorage in window) return;
-
-  // node.js exports
-  if (typeof __dirname != "undefined") {
-    window.create = create;
-    window = global;
-  } else {
-    window[asyncStorage] = {create: create};
-  }
 
   // exported function
   function create(name, callback, errorback, size) {
@@ -41,7 +30,7 @@
                             for (var i = this.length; i-- && this[i] !== value;);
                             return i;
                           },
-    setTimeout            = window.setTimeout,
+    setTimeout            = global.setTimeout,
     // strings shortcuts
     EOF                   = "\x00",
     ndexedDB              = "ndexedDB",
@@ -62,13 +51,13 @@
     $removeItem           = "removeItem",
     $clear                = "clear",
     // original IndexedDB ... unfortunately it's not usable right now as favorite choice, actually dropped later on
-    indexedDB             = window["i" + ndexedDB] ||
-                            window["webkitI" + ndexedDB] ||
-                            window["mozI" + ndexedDB] ||
-                            window["msI" + ndexedDB],
+    indexedDB             = global["i" + ndexedDB] ||
+                            global["webkitI" + ndexedDB] ||
+                            global["mozI" + ndexedDB] ||
+                            global["msI" + ndexedDB],
     // other shortcuts
     NULL                  = null,
-    max                   = window.Math.max,
+    max                   = global.Math.max,
     // lazily assigned variables
     AsynchronousStorage, asPrototype,
     prepareTable, readLength, checkLength, setLength,
@@ -77,15 +66,14 @@
   ;
 
   // the circus ... hopefully a bloody fallback will always be available
-  if (openDatabase in window) {
-    AsynchronousStorage = /*:WebSQL:*/
+  if (openDatabase in global) {
+    AsynchronousStorage = require('./WebSQL')
   } else if (indexedDB) {
-    AsynchronousStorage = /*:IndexedDB:*/
-  } else if (localStorage in window) {
-    AsynchronousStorage = /*:localStorage:*/
+    AsynchronousStorage = require('./IndexedDB')
+  } else if (localStorage in global) {
+    AsynchronousStorage = require('./localStorage')
   } else {
-    AsynchronousStorage = /*:cookie:*/
+    AsynchronousStorage = require('./cookie')
   }
 
-}("asyncStorage", this));
-// var db = asyncStorage.create("db", function () {console.log(arguments)});
+module.exports = {create: create}
