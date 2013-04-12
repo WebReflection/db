@@ -1,5 +1,29 @@
-// cookie based version
-    function AsynchronousStorage(name, callback, errorback) {
+var common = require("./common"),
+	unobtrusiveTableName = common.unobtrusiveTableName,
+	EOF = common.EOF,
+	$key = common.$key,
+	$keys = common.$keys,
+	$length = common.$length,
+	$removeItem = common.$removeItem,
+	$clear = common.$clear,
+	$getItem = common.$getItem,
+	$setItem = common.$setItem,
+	setTimeout = common.setTimeout,
+	bind = common.bind,
+	indexOf = common.indexOf,
+	nothingToDoHere = common.nothingToDoHere,
+	NULL = common.NULL,
+	concat = common.concat,
+	prototype = common.prototype,
+	clearOneItem,
+	readLength,
+	clearAllItems,
+	setLength,
+	checkIfPresent,
+	asPrototype,
+	prepareUpdate,
+
+	AsynchronousStorage = function AsynchronousStorage(name, callback, errorback) {
       var self = this;
       self.name = name;
       self.type = "cookie";

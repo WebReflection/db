@@ -1,5 +1,41 @@
-// WebSQL version
-    function AsynchronousStorage(name, callback, errorback, size) {
+var common = require("./common"),
+	openDatabase = common.openDatabase,
+	transaction = common.transaction,
+	bind = common.bind,
+	executeSql = common.executeSql,
+	unobtrusiveTableName = common.unobtrusiveTableName,
+	valueFieldName = common.valueFieldName,
+	keyFieldName = common.keyFieldName,
+	concat = common.concat,
+	readTransaction = common.readTransaction,
+	$keys = common.$keys,
+	$length = common.$length,
+	indexOf = common.indexOf,
+	max = common.max,
+	prototype = common.prototype,
+	$key = common.$key,
+	$removeItem = common.$removeItem,
+	nothingToDoHere = common.nothingToDoHere,
+	$clear = common.$clear,
+	$getItem = common.$getItem,
+	$setItem = common.$setItem,
+
+	onUpdateComplete,
+	setLength,
+	checkLength,
+	readLength,
+	prepareTable,
+	prepareUpdate,
+	onCheckComplete,
+	checkIfPresent,
+	onGetComplete,
+	onItemsCleared,
+	clearAllItems,
+	onItemCleared,
+	clearOneItem,
+	asPrototype,
+
+	AsynchronousStorage = function AsynchronousStorage(name, callback, errorback, size) {
       var self = this;
       errorback = bind.call(errorback, self);
       self.name = name;

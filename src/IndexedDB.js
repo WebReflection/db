@@ -1,5 +1,38 @@
 // IndexedDB version
-    function AsynchronousStorage(name, callback, errorback) {
+var common = require("./common"),
+	indexedDB = common.indexedDB,
+	bind = common.bind,
+	unobtrusiveTableName = common.unobtrusiveTableName,
+	keyFieldName = common.keyFieldName,
+	valueFieldName = common.valueFieldName,
+	$key = common.$key,
+	$keys = common.$keys,
+	$length = common.$length,
+	NULL = common.NULL,
+	indexOf = common.indexOf,
+	transaction = common.transaction,
+	prototype = common.prototype,
+	$removeItem = common.$removeItem,
+	nothingToDoHere = common.nothingToDoHere,
+	$clear = common.$clear,
+	$getItem = common.$getItem,
+	$setItem = common.$setItem,
+
+	asPrototype,
+	setLength,
+	checkLength,
+	readLength,
+	prepareTable,
+	executeSql,
+	ndexedDB,
+	readTransaction,
+	onGetComplete,
+	onCheckComplete,
+	onUpdateComplete,
+	onItemCleared,
+	onItemsCleared,
+
+	AsynchronousStorage = function AsynchronousStorage(name, callback, errorback) {
       try {
         var
           self = this,

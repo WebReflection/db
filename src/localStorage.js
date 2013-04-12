@@ -1,5 +1,30 @@
-// localStorage version
-    function AsynchronousStorage(name, callback, errorback) {
+var common = require("./common"),
+	localStorage = common.localStorage,
+	unobtrusiveTableName = common.unobtrusiveTableName,
+	EOF = common.EOF,
+	$keys = common.$keys,
+	setTimeout = common.setTimeout,
+	bind = common.bind,
+	$length = common.$length,
+	$key = common.$key,
+	$removeItem = common.$removeItem,
+	indexOf = common.indexOf,
+	$getItem = common.$getItem,
+	$setItem = common.$setItem,
+	prototype = common.prototype,
+	NULL = common.NULL,
+	nothingToDoHere = common.nothingToDoHere,
+	$clear = common.$clear,
+
+	setLength,
+	clearOneItem,
+	clearAllItems,
+	checkIfPresent,
+	prepareUpdate,
+	readLength,
+	asPrototype,
+
+	AsynchronousStorage = function AsynchronousStorage(name, callback, errorback) {
       var self = this;
       self.name = name;
       self.type = localStorage;
