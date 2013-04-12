@@ -1,3 +1,11 @@
+How to use it
+=============
+after cloning the repo from github just type make
+
+How to run the tests
+====================
+just type ./test.sh
+
 asyncStorage :: a developer friendly Asynchronous Storage
 =========================================================
 let's face reality, the status of storages in the Web is a mess.
