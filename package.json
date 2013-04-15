@@ -1,5 +1,12 @@
 {
   "name": "asyncStorage",
-  "version": "0.1.1",
-  "main":"./build/asyncStorage.js"
+  "version": "0.1.2",
+  "main":"./build/asyncStorage.js",
+  "author": "Andrea Giammarchi <@WebReflection> (http://webreflection.blogspot.com/)",
+  "contributors": [
+    "Cristian Carlesso <@kentaromiura> (http://github.com/kentaromiura)"
+  ],
+  "devDependencies": {
+        "wrapup": "0.11.2"
+   }
 }
