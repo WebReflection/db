@@ -1,11 +1,3 @@
-How to use it
-=============
-after cloning the repo from github just type make
-
-How to run the tests
-====================
-just type ./test.sh
-
 asyncStorage :: a developer friendly Asynchronous Storage
 =========================================================
 let's face reality, the status of storages in the Web is a mess.
@@ -91,7 +83,16 @@ AsynchronousStorage API
 
 And this is pretty much it ... wanna test? [this page should be green](http://www.3site.eu/db/test/ "test")
 
+How to use it
+=============
+after cloning the repo from github just type make
+
+How to run the tests
+====================
+just type ./test.sh
+
 TODOs
 -----
   * improve tests to test errorbacks too
   * optionally, consider a fifth fallback through Flash Player shared object (*meh...!*)
+  * create a couple of wrappers for node.js (MongoDB,...)
