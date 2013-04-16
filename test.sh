@@ -1,3 +1,4 @@
 make
-python -m SimpleHTTPServer&
-open http://localhost:8000/test/
+./node_modules/.bin/polpetta &
+open http://localhost:1337/test/
+
